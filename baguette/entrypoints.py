@@ -16,7 +16,7 @@ def general():
 @general.command()
 def login(email):
     """
-    Connect to baguette.io using their email/password.
+    Connect to baguette.io using email/password.
     """
     if email:
         click.echo('Welcome {0}, please enter your baguette.io password.'.format(email))
