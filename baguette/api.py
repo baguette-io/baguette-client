@@ -9,7 +9,7 @@ import baguette.settings
 
 LOGGER = logging.getLogger(__name__)
 
-def store_jwt(token):
+def store_token(token):
     """
     Store the JWT in the user's home.
     :param token: the token to store.
@@ -17,7 +17,7 @@ def store_jwt(token):
     :rtype: None
     """
     home = os.path.expanduser("~")
-    with open(os.path.join(home, '.baguetterc'), 'w+') as filename:
+    with open(os.path.join(home, '.baguetterc'), 'w') as filename:
         filename.write(token)
 
 def login(email, password):
@@ -38,5 +38,5 @@ def login(email, password):
     except requests.exceptions.HTTPError as error:
         LOGGER.info(error)
         return False
-    store_jwt(result.json()['token'])
+    store_token(result.json()['token'])
     return True
