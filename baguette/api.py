@@ -9,7 +9,8 @@ import baguette.settings
 
 LOGGER = logging.getLogger(__name__)
 
-def store_token(token):
+
+def set_token(token):
     """
     Store the JWT in the user's home.
     :param token: the token to store.
@@ -19,6 +20,19 @@ def store_token(token):
     home = os.path.expanduser("~")
     with open(os.path.join(home, '.baguetterc'), 'w') as filename:
         filename.write(token)
+
+def get_token():
+    """
+    Try to retrieve the JWT in the user's home.
+    :returns: The token value.
+    :rtype: None, str
+    """
+    home = os.path.expanduser("~")
+    baguetterc = os.path.join(home, '.baguetterc')
+    if not os.path.exists(baguetterc):
+        return None
+    return open(baguetterc).read().strip()
+
 
 def login(email, password):
     """
@@ -38,5 +52,31 @@ def login(email, password):
     except requests.exceptions.HTTPError as error:
         LOGGER.info(error)
         return False
-    store_token(result.json()['token'])
+    set_token(result.json()['token'])
     return True
+
+def create(name):
+    """
+    Given a name, try to create an app.
+    Idempotent.
+    :param name: The app to create.
+    :type name:str
+    :returns: The status of the creation.
+    :rtype: None, dict
+    """
+    #1. Check that we have a token.
+    token = get_token()
+    if not token:
+        return False
+    #2. Variables for the request.
+    endpoint = 'application/apps/'
+    url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
+    headers = {'Authorization': 'JWT {0}'.format(token)}
+    #3. Query.
+    result = requests.post(url, data={'name':name}, headers=headers)
+    try:
+        result.raise_for_status()
+    except requests.exceptions.HTTPError as error:
+        LOGGER.info(error)
+        return False
+    return result.json()

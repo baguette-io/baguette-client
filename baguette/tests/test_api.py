@@ -8,13 +8,13 @@ tests for the api module.
 import baguette.api
 from .fixtures import *
 
-def test_store_token():
+def test_set_token():
     """
-    Check that store_token() write into a file.
+    Check that set_token() write into a file.
     """
     file_mock = mock.mock_open()
     with mock.patch('baguette.api.open', file_mock, create=True):
-        baguette.api.store_token('my_token')
+        baguette.api.set_token('my_token')
     file_mock().write.assert_called_once_with('my_token')
 
 def test_login_ok(req_ok):
