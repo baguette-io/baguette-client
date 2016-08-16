@@ -19,17 +19,28 @@ def req_raise():
     """
     Fixture for requests to simulate a HTTP error.
     """
-    res = requests.Response()
-    res.status_code = 404
-    requests.get = mock.Mock(return_value=res)
-    requests.post = mock.Mock(return_value=res)
+    def factory(result=None, code=404):
+        """
+        Factory.
+        """
+        res = requests.Response()
+        res.status_code = code
+        res.json = lambda: result
+        requests.get = mock.Mock(return_value=res)
+        requests.post = mock.Mock(return_value=res)
+    return factory
 
 @pytest.fixture
 def req_ok():
     """
-    Requests factory.
+    Fixture for requests to simulate a successfull HTTP request.
     """
-    res = mock.Mock()
-    res.json = lambda: {'token':'jwt'}
-    requests.get = mock.Mock(return_value=res)
-    requests.post = mock.Mock(return_value=res)
+    def factory(result):
+        """
+        Factory.
+        """
+        res = mock.Mock()
+        res.json = lambda: result
+        requests.get = mock.Mock(return_value=res)
+        requests.post = mock.Mock(return_value=res)
+    return factory

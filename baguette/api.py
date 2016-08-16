@@ -80,3 +80,29 @@ def create(name):
         LOGGER.info(error)
         return False
     return result.json()
+
+
+def signup(email, username, password):
+    """
+    Create an account on baguette.io
+    :param email: The email to signup with.
+    :type email: str
+    :param username: The username to signup in with.
+    :type username: str
+    :param password: The password to signup in with.
+    :type password: str
+    :returns: The status of the signup.
+    :rtype: tuple (bool, dict)
+    """
+    #1. Prepare the URL
+    endpoint = 'account/register/'
+    url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
+    #2. Query
+    result = requests.post(url, {'username': username, 'email': email, 'password': password,
+                                 'confirm_password':password})
+    try:
+        result.raise_for_status()
+    except requests.exceptions.HTTPError as error:
+        LOGGER.info(error)
+        return False, result.json()
+    return True, result.json()

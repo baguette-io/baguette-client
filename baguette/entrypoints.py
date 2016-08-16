@@ -14,6 +14,39 @@ def general():
     General commands.
     """
 
+@click.option('--password',
+              prompt=True,
+              hide_input=True,
+              confirmation_prompt=True)
+@click.option('--email', prompt=True)
+@click.option('--username',
+              prompt=True,
+              default=lambda: os.environ.get('USER', ''))
+@general.command()
+def signup(username, email, password):
+    """
+    Create an account on baguette.io
+    :param email: The email to signup with.
+    :type email: str
+    :param username: The username to signup in with.
+    :type username: str
+    :param password: The password to signup in with.
+    :type password: str
+    :returns: The status of the signup.
+    :rtype: bool
+    """
+    status, infos = baguette.api.signup(email, username, password)
+    if status:
+        click.echo('Successfully signup to baguette.io.\n'
+                   'You can now login using `baguette login`.')
+        return True
+    click.echo('Signup Failed. Please verify your inputs.')
+    for field, msg in infos.iteritems():
+        field = field if field != 'non_field_errors' else 'general'
+        click.echo('{0} : {1}'.format(field, ''.join(msg)))
+    return False
+
+
 @click.argument('email', required=False)
 @general.command()
 def login(email):
