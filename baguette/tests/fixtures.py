@@ -2,6 +2,7 @@
 """
 Fixtures for the unit tests.
 """
+import git
 import mock
 import pytest
 import requests
@@ -44,3 +45,14 @@ def req_ok():
         requests.get = mock.Mock(return_value=res)
         requests.post = mock.Mock(return_value=res)
     return factory
+
+
+@pytest.yield_fixture()
+def git_repo(tmpdir):
+    """
+    Patch os.getcwd() and initialize a git repo.
+    """
+    repo = mock.Mock(return_value=str(tmpdir))
+    with mock.patch('os.getcwd', repo):
+        git.Repo.init(str(tmpdir))
+        yield

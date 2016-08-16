@@ -4,7 +4,7 @@ tests for the api module.
 """
 # pylint:disable=no-member
 # pylint:disable=wildcard-import,unused-wildcard-import
-
+import os
 import baguette.api
 from .fixtures import *
 
@@ -93,12 +93,21 @@ def test_create_app_error(req_raise):
     with mock.patch('baguette.api.get_token', m):
         assert baguette.api.create('xxx') == False
 
-def test_git_init_ok():
+def test_git_init_ok(git_repo, tmpdir):
     """
     Add a remote to a current git directory.
     """
+    path = os.path.join(str(tmpdir), '.git', 'config')
+    assert 'remote "baguette.io"' not in open(path).read()
+    baguette.api.git_init('baguette.io')
+    assert 'remote "baguette.io"' in open(path).read()
 
-def test_git_init_error():
+
+def test_git_init_idempotent(git_repo, tmpdir):
     """
-    Try to add a remote to a non git directory.
+    Don't add twice the remote to the current git directory.
     """
+    path = os.path.join(str(tmpdir), '.git', 'config')
+    baguette.api.git_init('baguette.io')
+    baguette.api.git_init('baguette.io')
+    assert open(path).read().count('remote "baguette.io"') == 1
