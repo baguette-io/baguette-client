@@ -82,7 +82,7 @@ def create(name):
     """
     #1. Check that we are currently in a git repo.
     try:
-        repo = git.Repo(os.getcwd())
+        git.Repo(os.getcwd())
     except git.exc.InvalidGitRepositoryError:
         click.echo('The current path is not a root git directory.')
         return False
@@ -92,9 +92,7 @@ def create(name):
     #3. Call the API to create the app
     created = baguette.api.create(name)
     if created:
-        #4. Add the remote if not yet added.
-        if not any(r for r in repo.remotes if r.name == 'baguette.io'):
-            repo.create_remote('baguette.io', created['repo_uri'])
+        baguette.api.git_init(created['repo_uri'])
         click.echo("""{0} created.
 Automatically added `baguette.io` remote.
 When pushing to this remote, your app will be automatically deployed.""".format(name))

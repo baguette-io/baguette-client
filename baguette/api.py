@@ -4,6 +4,7 @@ Module managing all the API calls to baguette.io
 """
 import logging
 import os
+import git
 import requests
 import baguette.settings
 
@@ -33,6 +34,30 @@ def get_token():
         return None
     return open(baguetterc).read().strip()
 
+def signup(email, username, password):
+    """
+    Create an account on baguette.io
+    :param email: The email to signup with.
+    :type email: str
+    :param username: The username to signup in with.
+    :type username: str
+    :param password: The password to signup in with.
+    :type password: str
+    :returns: The status of the signup.
+    :rtype: tuple (bool, dict)
+    """
+    #1. Prepare the URL
+    endpoint = 'account/register/'
+    url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
+    #2. Query
+    result = requests.post(url, {'username': username, 'email': email, 'password': password,
+                                 'confirm_password':password})
+    try:
+        result.raise_for_status()
+    except requests.exceptions.HTTPError as error:
+        LOGGER.info(error)
+        return False, result.json()
+    return True, result.json()
 
 def login(email, password):
     """
@@ -81,28 +106,14 @@ def create(name):
         return False
     return result.json()
 
-
-def signup(email, username, password):
+def git_init(remote):
     """
-    Create an account on baguette.io
-    :param email: The email to signup with.
-    :type email: str
-    :param username: The username to signup in with.
-    :type username: str
-    :param password: The password to signup in with.
-    :type password: str
-    :returns: The status of the signup.
-    :rtype: tuple (bool, dict)
+    Add the baguette.io remote
+    to the current git repo, if not present.
+    :param remote: The remote to add.
+    :type remote: str
+    :rtype: None
     """
-    #1. Prepare the URL
-    endpoint = 'account/register/'
-    url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
-    #2. Query
-    result = requests.post(url, {'username': username, 'email': email, 'password': password,
-                                 'confirm_password':password})
-    try:
-        result.raise_for_status()
-    except requests.exceptions.HTTPError as error:
-        LOGGER.info(error)
-        return False, result.json()
-    return True, result.json()
+    repo = git.Repo(os.getcwd())
+    if not any(r for r in repo.remotes if r.name == 'baguette.io'):
+        repo.create_remote('baguette.io', remote)

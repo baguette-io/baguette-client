@@ -66,12 +66,39 @@ def test_signup_error(req_raise):
     assert not status
     assert isinstance(infos, dict)
 
-def test_create_app_ok(req_ok):
+def test_create_app_with_token(req_ok):
     """
-    Create app API call which succeed.
+    Try to create an app with a token.
     """
+    req_ok({'repo_uri':'uri'})
+    m = mock.Mock(return_value='my_token')
+    with mock.patch('baguette.api.get_token', m):
+        assert baguette.api.create('xxx')
+
+def test_create_app_no_token(req_ok):
+    """
+    Try to create an app without token.
+    """
+    req_ok({'repo_uri':'uri'})
+    m = mock.Mock(return_value=None)
+    with mock.patch('baguette.api.get_token', m):
+        assert baguette.api.create('xxx') == False
 
 def test_create_app_error(req_raise):
     """
     Create app API call which failed.
+    """
+    req_raise({})
+    m = mock.Mock(return_value='my_token')
+    with mock.patch('baguette.api.get_token', m):
+        assert baguette.api.create('xxx') == False
+
+def test_git_init_ok():
+    """
+    Add a remote to a current git directory.
+    """
+
+def test_git_init_error():
+    """
+    Try to add a remote to a non git directory.
     """
