@@ -3,6 +3,8 @@
 tests for the api module.
 """
 # pylint:disable=no-member
+# pylint:disable=unused-argument
+# pylint:disable=redefined-outer-name
 # pylint:disable=wildcard-import,unused-wildcard-import
 import os
 import baguette.api
@@ -66,32 +68,32 @@ def test_signup_error(req_raise):
     assert not status
     assert isinstance(infos, dict)
 
-def test_create_app_with_token(req_ok):
+def test_create_app_with_token_ok(req_ok):
     """
     Try to create an app with a token.
     """
     req_ok({'repo_uri':'uri'})
-    m = mock.Mock(return_value='my_token')
-    with mock.patch('baguette.api.get_token', m):
+    jwt = mock.Mock(return_value='my_token')
+    with mock.patch('baguette.api.get_token', jwt):
         assert baguette.api.create('xxx')
 
-def test_create_app_no_token(req_ok):
+def test_create_app_no_token_error(req_ok):
     """
     Try to create an app without token.
     """
     req_ok({'repo_uri':'uri'})
-    m = mock.Mock(return_value=None)
-    with mock.patch('baguette.api.get_token', m):
-        assert baguette.api.create('xxx') == False
+    res = mock.Mock(return_value=None)
+    with mock.patch('baguette.api.get_token', res):
+        assert not baguette.api.create('xxx')
 
 def test_create_app_error(req_raise):
     """
     Create app API call which failed.
     """
     req_raise({})
-    m = mock.Mock(return_value='my_token')
-    with mock.patch('baguette.api.get_token', m):
-        assert baguette.api.create('xxx') == False
+    res = mock.Mock(return_value='my_token')
+    with mock.patch('baguette.api.get_token', res):
+        assert not baguette.api.create('xxx')
 
 def test_git_init_ok(git_repo, tmpdir):
     """
@@ -103,7 +105,7 @@ def test_git_init_ok(git_repo, tmpdir):
     assert 'remote "baguette.io"' in open(path).read()
 
 
-def test_git_init_idempotent(git_repo, tmpdir):
+def test_git_init_idempotent_ok(git_repo, tmpdir):
     """
     Don't add twice the remote to the current git directory.
     """
