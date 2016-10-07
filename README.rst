@@ -14,9 +14,17 @@ Help
       --help  Show this message and exit.
 
       Commands:
-        create  Create an app of the current git repo.
+        signup  Create an account on baguette.io
         login   Connect to baguette.io using email/password.
-        signup  Create an account on baguette.io :param...
+        app create
+        app list
+        app delete
+        key create
+        key list
+        key delete
+        vpc create
+        vpc list
+        vpc delete
 
 
 Signup

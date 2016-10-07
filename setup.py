@@ -27,7 +27,7 @@ setup(
         ],
     },
     extras_require={
-        'test': [
+        'testing': [
             'mock==2.0.0',
             'pytest==2.9.2',
             'pytest-cov==2.3.0',

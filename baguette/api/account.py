@@ -1,10 +1,9 @@
 #-*- coding:utf-8 -*-
 """
-Module managing all the API calls to baguette.io
+Module managing all the account calls to baguette.io
 """
 import logging
 import os
-import git
 import requests
 import baguette.settings
 
@@ -47,7 +46,7 @@ def signup(email, username, password):
     :rtype: tuple (bool, dict)
     """
     #1. Prepare the URL
-    endpoint = 'account/register/'
+    endpoint = 'accounts/register/'
     url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
     #2. Query
     result = requests.post(url, {'username': username, 'email': email, 'password': password,
@@ -69,7 +68,7 @@ def login(email, password):
     :returns: The status of the login.
     :rtype: bool
     """
-    endpoint = 'account/login/'
+    endpoint = 'accounts/login/'
     url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
     result = requests.post(url, data={'email':email, 'password':password})
     try:
@@ -79,41 +78,3 @@ def login(email, password):
         return False
     set_token(result.json()['token'])
     return True
-
-def create(name):
-    """
-    Given a name, try to create an app.
-    Idempotent.
-    :param name: The app to create.
-    :type name:str
-    :returns: The status of the creation.
-    :rtype: None, dict
-    """
-    #1. Check that we have a token.
-    token = get_token()
-    if not token:
-        return False
-    #2. Variables for the request.
-    endpoint = 'application/apps/'
-    url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
-    headers = {'Authorization': 'JWT {0}'.format(token)}
-    #3. Query.
-    result = requests.post(url, data={'name':name}, headers=headers)
-    try:
-        result.raise_for_status()
-    except requests.exceptions.HTTPError as error:
-        LOGGER.info(error)
-        return False
-    return result.json()
-
-def git_init(remote):
-    """
-    Add the baguette.io remote
-    to the current git repo, if not present.
-    :param remote: The remote to add.
-    :type remote: str
-    :rtype: None
-    """
-    repo = git.Repo(os.getcwd())
-    if not any(r for r in repo.remotes if r.name == 'baguette.io'):
-        repo.create_remote('baguette.io', remote)
