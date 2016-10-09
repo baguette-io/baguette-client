@@ -13,7 +13,7 @@ def vpc():
     """
 
 @click.argument('name')
-@vpc.command(name='vpc-create')
+@vpc.command(name='vpc-create', help='Create a vpc.')
 def create(name):
     """
     Create a vpc.
@@ -30,9 +30,9 @@ def create(name):
         return True
     return display_errors(infos)
 
-@click.argument('offset', default=0, type=int)
-@click.argument('limit', default=10, type=int)
-@vpc.command(name='vpc-list')
+@click.option('--offset', default=0, type=int, help='The offset to start retrieving the vpcs from.')
+@click.option('--limit', default=10, type=int, help='The number of vpcs per request.')
+@vpc.command(name='vpc-list', help='List all the vpcs.')
 def find(offset, limit):
     """
     List all the vpcs.
@@ -48,7 +48,7 @@ def find(offset, limit):
     if status:
         click.echo('Starting {0}, listing {1} vpcs on a total of {2} vpcs.'.format(
             offset,
-            min(offset+limit, infos['count']),
+            min(limit, infos['count']),
             infos['count']))
         click.echo('Name\tDeletable\tCreation Date\n')
         for result in infos['results']:
@@ -61,7 +61,7 @@ def find(offset, limit):
     return display_errors(infos)
 
 @click.argument('name')
-@vpc.command(name='vpc-delete')
+@vpc.command(name='vpc-delete', help='Delete a vpc.')
 def delete(name):
     """
     Delete a vpc.

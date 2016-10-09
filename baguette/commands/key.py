@@ -14,11 +14,10 @@ def key():
 
 @click.argument('public', type=click.File())
 @click.argument('name')
-@key.command(name='key-create')
+@key.command(name='key-create', help='Create a key.')
 def create(name, public):
     """
     Create a key.
-    Idempotent.
     :param name: The key name.
     :type name: str
     :param key: The public key.
@@ -33,9 +32,9 @@ def create(name, public):
         return True
     return display_errors(infos)
 
-@click.argument('offset', default=0, type=int)
-@click.argument('limit', default=10, type=int)
-@key.command(name='key-list')
+@click.option('--offset', default=0, type=int, help='The offset to start retrieving the keys from.')
+@click.option('--limit', default=10, type=int, help='The number of keys per request.')
+@key.command(name='key-list', help='List all the keys.')
 def find(offset, limit):
     """
     List all the keys.
@@ -51,7 +50,7 @@ def find(offset, limit):
     if status:
         click.echo('Starting {0}, listing {1} keys on a total of {2} keys.'.format(
             offset,
-            min(offset+limit, infos['count']),
+            min(limit, infos['count']),
             infos['count']))
         click.echo('Name\tPublic key\tCreation Date\n')
         for result in infos['results']:
@@ -64,7 +63,7 @@ def find(offset, limit):
     return display_errors(infos)
 
 @click.argument('name')
-@key.command(name='key-delete')
+@key.command(name='key-delete', help='Delete a key.')
 def delete(name):
     """
     Delete a key.

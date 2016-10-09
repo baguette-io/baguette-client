@@ -22,7 +22,7 @@ def account():
 @click.option('--username',
               prompt=True,
               default=lambda: os.environ.get('USER', ''))
-@account.command()
+@account.command(help='Create an account on baguette.io.')
 def signup(username, email, password):
     """
     Create an account on baguette.io.
@@ -45,7 +45,7 @@ def signup(username, email, password):
 
 
 @click.argument('email', required=False)
-@account.command()
+@account.command(help='Connect to baguette.io using email/password.')
 def login(email):
     """
     Connect to baguette.io using email/password.
@@ -67,7 +67,7 @@ def login(email):
     click.echo('Authentication failed, please check your credentials.')
     return False
 
-@account.command(name='quotas')
+@account.command(name='quotas', help='List all the account quotas.')
 def quotas():
     """
     List all the account quotas.

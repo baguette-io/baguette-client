@@ -16,7 +16,7 @@ def app():
 
 @click.argument('vpc', required=False, default='default')
 @click.argument('name', required=False)
-@app.command(name='app-create')
+@app.command(name='app-create', help='Create an app of the current git repo.')
 def create(name, vpc):
     """
     Create an app of the current git repo.
@@ -49,9 +49,9 @@ When pushing to this remote, your app will be automatically deployed.""".format(
         return True
     return display_errors(infos)
 
-@click.argument('offset', default=0, type=int)
-@click.argument('limit', default=10, type=int)
-@app.command(name='app-list')
+@click.option('--offset', default=0, type=int, help='The offset to start retrieving the apps from.')
+@click.option('--limit', default=10, type=int, help='The number of apps per request.')
+@app.command(name='app-list', help='List all the apps.')
 def find(offset, limit):
     """
     List all the apps.
@@ -67,7 +67,7 @@ def find(offset, limit):
     if status:
         click.echo('Starting {0}, listing {1} apps on a total of {2} apps.'.format(
             offset,
-            min(offset+limit, infos['count']),
+            min(limit, infos['count']),
             infos['count']))
         click.echo('Name\tVPC\tURI\tCreation Date\n')
         for result in infos['results']:
@@ -81,7 +81,7 @@ def find(offset, limit):
     return display_errors(infos)
 
 @click.argument('name')
-@app.command(name='app-delete')
+@app.command(name='app-delete', help='Delete an app.')
 def delete(name):
     """
     Delete an app.
