@@ -29,6 +29,7 @@ def req_raise():
         res.json = lambda: result
         requests.get = mock.Mock(return_value=res)
         requests.post = mock.Mock(return_value=res)
+        requests.delete = mock.Mock(return_value=res)
     return factory
 
 @pytest.fixture
@@ -44,6 +45,7 @@ def req_ok():
         res.json = lambda: result
         requests.get = mock.Mock(return_value=res)
         requests.post = mock.Mock(return_value=res)
+        requests.delete = mock.Mock(return_value=res)
     return factory
 
 
