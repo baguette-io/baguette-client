@@ -2,6 +2,7 @@
 """
 Accounts commands.
 """
+import decimal
 import os
 import click
 import baguette.api.account as api
@@ -65,3 +66,23 @@ def login(email):
         return True
     click.echo('Authentication failed, please check your credentials.')
     return False
+
+@account.command(name='quotas')
+def quotas():
+    """
+    List all the account quotas.
+    :returns: The status of the request.
+    :rtype: bool
+    """
+    #1. Call the API to get all the keys
+    status, infos = api.quotas()
+    if status:
+        click.echo('Name\tMax\tCreation Date\n')
+        for result in infos['results']:
+            click.echo('{0}\t{1}\t{2}'.format(
+                result['key'],
+                int(decimal.Decimal(result['value'])),
+                result['date_created']))
+            click.echo('')
+        return True
+    return display_errors(infos)

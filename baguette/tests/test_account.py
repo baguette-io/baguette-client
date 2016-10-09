@@ -55,7 +55,8 @@ def test_signup_ok(req_ok):
     file_mock = mock.mock_open()
     req_ok({'account':{'email': 'email', 'username':'username'},
             'key':{'name':'default', 'private':'', 'public':'', 'fingerprint':''}})
-    with mock.patch('baguette.api.account.open', file_mock, create=True), mock.patch('os.chmod'), mock.patch('os.makedirs'):
+    with mock.patch('baguette.api.account.open', file_mock, create=True),\
+            mock.patch('os.chmod'), mock.patch('os.makedirs'):
         status, infos = baguette.api.account.signup('email', 'username', 'password')
     assert status
     assert 'account' in infos
@@ -84,6 +85,23 @@ def test_create_default_key(req_ok):
     file_mock = mock.mock_open()
     req_ok({'account':{'email': 'email', 'username':'username'},
             'key':{'name':'default', 'private':'', 'public':'', 'fingerprint':''}})
-    with mock.patch('baguette.api.account.open', file_mock, create=True), mock.patch('os.chmod'), mock.patch('os.makedirs'):
+    with mock.patch('baguette.api.account.open', file_mock, create=True),\
+            mock.patch('os.chmod'), mock.patch('os.makedirs'):
         baguette.api.account.signup('email', 'username', 'password')
     assert file_mock().write.call_count == 2
+
+def test_quotas(req_ok):
+    """
+    Quotas API call which succeed.
+    """
+    req_ok({'count': 3, 'previous': None, 'results': [{'date_created': '2016-10-07T18:24:32',
+                                                       'key': 'max_projects', 'value':'1000.0000'},
+                                                      {'date_created': '2016-10-07T18:24:32',
+                                                       'key': 'max_vpcs', 'value':'1000.0000'},
+                                                      {'date_created': '2016-10-07T18:24:32',
+                                                       'key': 'max_jeys', 'value':'1000.0000'},
+                                                     ], 'next': None})
+    status, infos = baguette.api.account.quotas()
+    assert status
+    assert 'count' in infos
+    assert 'results' in infos

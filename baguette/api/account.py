@@ -104,3 +104,24 @@ def login(email, password):
         return False
     set_token(result.json()['token'])
     return True
+
+def quotas():
+    """
+    List all the account quotas.
+    :returns: The status of the request.
+    :rtype: bool
+    """
+    #1. Check that we have a token.
+    token = get_token()
+    #2. Variables for the request.
+    endpoint = 'quotas/'
+    url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
+    headers = {'Authorization': 'JWT {0}'.format(token)}
+    #3. Query.
+    result = requests.get(url, headers=headers)
+    try:
+        result.raise_for_status()
+    except requests.exceptions.HTTPError as error:
+        LOGGER.info(error)
+        return False, result.json()
+    return True, result.json()
