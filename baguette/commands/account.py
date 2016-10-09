@@ -24,7 +24,7 @@ def account():
 @account.command()
 def signup(username, email, password):
     """
-    Create an account on baguette.io
+    Create an account on baguette.io.
     :param email: The email to signup with.
     :type email: str
     :param username: The username to signup in with.

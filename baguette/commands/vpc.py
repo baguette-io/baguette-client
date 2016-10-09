@@ -46,7 +46,7 @@ def find(offset, limit):
     #1. Call the API to get all the vpcs
     status, infos = api.find(limit, offset)
     if status:
-        click.echo('Starting {0}, listing {1} vpcs on a total of {2} vpc.'.format(
+        click.echo('Starting {0}, listing {1} vpcs on a total of {2} vpcs.'.format(
             offset,
             min(offset+limit, infos['count']),
             infos['count']))
