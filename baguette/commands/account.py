@@ -4,7 +4,8 @@ Accounts commands.
 """
 import os
 import click
-import baguette.api
+import baguette.api.account as api
+from .utils import display_errors
 
 @click.group()
 def account():
@@ -33,16 +34,13 @@ def signup(username, email, password):
     :returns: The status of the signup.
     :rtype: bool
     """
-    status, infos = baguette.api.signup(email, username, password)
+    status, infos = api.signup(email, username, password)
     if status:
-        click.echo('Successfully signup to baguette.io.\n'
-                   'You can now login using `baguette login`.')
+        click.echo('Successfully signup to baguette.io.')
+        click.echo('A RSA 4096 bits key has been generated in your ~/.ssh folder.')
+        click.echo('\nYou can now login using `baguette login`.')
         return True
-    click.echo('Signup Failed. Please verify your inputs.')
-    for field, msg in infos.iteritems():
-        field = field if field != 'non_field_errors' else 'general'
-        click.echo('{0} : {1}'.format(field, ''.join(msg)))
-    return False
+    return display_errors(infos)
 
 
 @click.argument('email', required=False)
@@ -61,7 +59,7 @@ def login(email):
         click.echo('Please enter your baguette.io credentials.')
         email = click.prompt('Email')
     password = click.prompt('Password', hide_input=True)
-    if baguette.api.login(email, password):
+    if api.login(email, password):
         #click.echo('Successfully logged in as {0}. Credentials expire in 1 hour.'.format(email))
         click.echo('Successfully logged in as {0}.'.format(email))
         return True

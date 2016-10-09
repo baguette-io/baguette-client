@@ -52,11 +52,20 @@ def test_signup_ok(req_ok):
     """
     signup API call which succeed.
     """
-    req_ok({'email':'email', 'username':'username'})
-    status, infos = baguette.api.account.signup('email', 'username', 'password')
+    file_mock = mock.mock_open()
+    req_ok({'account':{'email': 'email', 'username':'username'},
+            'key':{'name':'default', 'private':'', 'public':'', 'fingerprint':''}})
+    with mock.patch('baguette.api.account.open', file_mock, create=True), mock.patch('os.chmod'), mock.patch('os.makedirs'):
+        status, infos = baguette.api.account.signup('email', 'username', 'password')
     assert status
-    assert 'email' in infos
-    assert 'username' in infos
+    assert 'account' in infos
+    assert 'email' in infos['account']
+    assert 'username' in infos['account']
+    assert 'key' in infos
+    assert 'name' in infos['key']
+    assert 'private' in infos['key']
+    assert 'public' in infos['key']
+    assert 'fingerprint' in infos['key']
 
 def test_signup_error(req_raise):
     """
@@ -66,3 +75,15 @@ def test_signup_error(req_raise):
     status, infos = baguette.api.account.signup('email', 'username', 'password')
     assert not status
     assert isinstance(infos, dict)
+
+
+def test_create_default_key(req_ok):
+    """
+    When signup check that the keys is writtent.
+    """
+    file_mock = mock.mock_open()
+    req_ok({'account':{'email': 'email', 'username':'username'},
+            'key':{'name':'default', 'private':'', 'public':'', 'fingerprint':''}})
+    with mock.patch('baguette.api.account.open', file_mock, create=True), mock.patch('os.chmod'), mock.patch('os.makedirs'):
+        baguette.api.account.signup('email', 'username', 'password')
+    assert file_mock().write.call_count == 2

@@ -5,7 +5,7 @@ App commands.
 import os
 import click
 import git
-import baguette.api
+import baguette.api.app as api
 
 @click.group()
 def app():
@@ -34,9 +34,9 @@ def create(name):
     name = name or os.path.basename(os.getcwd())
     click.echo('Creating {0}...'.format(name))
     #3. Call the API to create the app
-    created = baguette.api.create(name)
+    created = api.create(name)
     if created:
-        baguette.api.git_init(created['repo_uri'])
+        api.git_init(created['repo_uri'])
         click.echo("""{0} created.
 Automatically added `baguette.io` remote.
 When pushing to this remote, your app will be automatically deployed.""".format(name))

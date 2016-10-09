@@ -10,7 +10,7 @@ import os
 import baguette.api.app
 from .fixtures import *
 
-def test_create_app_with_token_ok(req_ok):
+def test_create_with_token_ok(req_ok):
     """
     Try to create an app with a token.
     """
@@ -19,7 +19,7 @@ def test_create_app_with_token_ok(req_ok):
     with mock.patch('baguette.api.account.get_token', jwt):
         assert baguette.api.app.create('xxx')
 
-def test_create_app_no_token_error(req_ok):
+def test_create_no_token_error(req_ok):
     """
     Try to create an app without token.
     """
@@ -28,7 +28,7 @@ def test_create_app_no_token_error(req_ok):
     with mock.patch('baguette.api.account.get_token', res):
         assert not baguette.api.app.create('xxx')
 
-def test_create_app_error(req_raise):
+def test_create_error(req_raise):
     """
     Create app API call which failed.
     """

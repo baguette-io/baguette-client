@@ -3,7 +3,7 @@
 Contains all the baguette entrypoints.
 """
 import click
-from baguette.commands import account, app
+from baguette.commands import account, app, key
 import baguette.settings
 
 def main():
@@ -11,4 +11,4 @@ def main():
     Baguette CLI.
     """
     baguette.settings.load()
-    return click.CommandCollection(sources=[account, app])()
+    return click.CommandCollection(sources=[account, app, key])()

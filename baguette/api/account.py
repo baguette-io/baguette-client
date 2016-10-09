@@ -4,6 +4,7 @@ Module managing all the account calls to baguette.io
 """
 import logging
 import os
+import stat
 import requests
 import baguette.settings
 
@@ -33,6 +34,28 @@ def get_token():
         return None
     return open(baguetterc).read().strip()
 
+
+def create_default_key(username, key):
+    """
+    Create the default key when signup.
+    :param username: The username creating the account.
+    :type username: str
+    :param key: Contains all the key informations.
+    :type key:dict
+    :rtype: None
+    """
+    home = os.path.expanduser("~")
+    directory = os.path.join(home, '.ssh')
+    public = os.path.join(directory, 'baguetteio-{0}-default.pub'.format(username))
+    private = os.path.join(directory, 'baguetteio-{0}-default.pem'.format(username))
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+        os.chmod(directory, stat.S_IREAD)
+    open(public, 'w').write(key['public'])
+    os.chmod(public, stat.S_IREAD)
+    open(private, 'w').write(key['private'])
+    os.chmod(private, stat.S_IREAD)
+
 def signup(email, username, password):
     """
     Create an account on baguette.io
@@ -56,7 +79,10 @@ def signup(email, username, password):
     except requests.exceptions.HTTPError as error:
         LOGGER.info(error)
         return False, result.json()
-    return True, result.json()
+    result = result.json()
+    #3. Create the default key
+    create_default_key(result['account']['username'], result['key'])
+    return True, result
 
 def login(email, password):
     """

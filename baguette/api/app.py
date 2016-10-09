@@ -16,9 +16,9 @@ def create(name):
     Given a name, try to create an app.
     Idempotent.
     :param name: The app to create.
-    :type name:str
+    :type name: str
     :returns: The status of the creation.
-    :rtype: None, dict
+    :rtype: list (<bool>, <dict>)
     """
     #1. Check that we have a token.
     token = account.get_token()
@@ -34,8 +34,8 @@ def create(name):
         result.raise_for_status()
     except requests.exceptions.HTTPError as error:
         LOGGER.info(error)
-        return False
-    return result.json()
+        return False, result.json()
+    return True, result.json()
 
 def git_init(remote):
     """
