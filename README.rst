@@ -13,46 +13,16 @@ Help
     Options:
       --help  Show this message and exit.
 
-      Commands:
-        signup  Create an account on baguette.io
-        login   Connect to baguette.io using email/password.
-        app create
-        app list
-        app delete
-        key create
-        key list
-        key delete
-        vpc create
-        vpc list
-        vpc delete
-
-
-Signup
-------
-
-::
-
-    [my-code]$ baguette signup
-    Username [test]:
-    Email:
-    Password:
-    Repeat for confirmation:
-
-Login
------
-
-::
-
-    [my-code]$ baguette login
-    Please enter your baguette.io credentials.
-    Email: test@test.test
-    Password: 
-    Successfully logged in as test@test.test.
-
-
-Create
-------
-
-::
-
-    [my-code] baguette create
+    Commands:
+      app-create  Create an app of the current git repo.
+      app-delete  Delete an app.
+      app-list    List all the apps.
+      key-create  Create a key.
+      key-delete  Delete a key.
+      key-list    List all the keys.
+      login       Connect to baguette.io using email/password.
+      quotas      List all the account quotas.
+      signup      Create an account on baguette.io.
+      vpc-create  Create a vpc.
+      vpc-delete  Delete a vpc.
+      vpc-list    List all the vpcs.
