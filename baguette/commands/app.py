@@ -68,7 +68,7 @@ def find(offset, limit):
             infos['count']))
         click.echo('Name\tURI\tCreation Date\n')
         for result in infos['results']:
-            click.echo('{0}\t{1}\t{2}\t{3}'.format(
+            click.echo('{0}\t{1}\t{2}'.format(
                 result['name'],
                 result['uri'],
                 result['date_created']))
