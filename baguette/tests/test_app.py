@@ -53,10 +53,10 @@ def test_list_ok(req_ok):
     """
     req_ok({'count': 2, 'previous': None, 'results': [{'date_created': '2016-10-07T18:24:32',
                                                        'date_modified': '2016-10-07T18:24:32',
-                                                       'name': 'un', 'vpc': 'default'},
+                                                       'name': 'un'},
                                                       {'date_created': '2016-10-09T01:19:57',
                                                        'date_modified': '2016-10-09T01:19:57',
-                                                       'name': 'deux', 'vpc': 'my_vpc'},
+                                                       'name': 'deux'},
                                                      ], 'next': None})
     status, infos = baguette.api.app.find(10, 0)
     assert status

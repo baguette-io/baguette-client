@@ -11,14 +11,12 @@ import baguette.api.account as account
 
 LOGGER = logging.getLogger(__name__)
 
-def create(name, vpc):
+def create(name):
     """
     Given a name, try to create an app.
     Idempotent.
     :param name: The app to create.
     :type name: str
-    :param vpc: The vpc name containing the app.
-    :type vpc: str
     :returns: The status of the creation.
     :rtype: list (<bool>, <dict>)
     """
@@ -29,7 +27,7 @@ def create(name, vpc):
     url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
     headers = {'Authorization': 'JWT {0}'.format(token)}
     #3. Query.
-    result = requests.post(url, data={'name':name, 'vpc': vpc}, headers=headers)
+    result = requests.post(url, data={'name':name}, headers=headers)
     try:
         result.raise_for_status()
     except requests.exceptions.HTTPError as error:

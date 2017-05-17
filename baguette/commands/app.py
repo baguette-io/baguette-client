@@ -14,16 +14,13 @@ def app():
     App group commands.
     """
 
-@click.argument('vpc', required=False, default='default')
 @click.argument('name', required=False)
 @app.command(name='app-create', help='Create an app of the current git repo.')
-def create(name, vpc):
+def create(name):
     """
     Create an app of the current git repo.
     :param name: The app name. Optional.
     :type name: None, str
-    :param vpc: The vpc name. Default to `default`.
-    :type vpc: str
     :returns: The status of the creation.
     :rtype: bool
     """
@@ -40,7 +37,7 @@ def create(name, vpc):
     #3. Generate the name if not set
     name = name or os.path.basename(os.getcwd())
     #4. Call the API to create the app
-    created, infos = api.create(name, vpc)
+    created, infos = api.create(name)
     if created:
         api.git_init(infos['uri'])
         click.echo("""{0} created.
@@ -62,18 +59,17 @@ def find(offset, limit):
     :returns: The status of the request.
     :rtype: bool
     """
-    #1. Call the API to get all the vpcs
+    #1. Call the API to get all the apps
     status, infos = api.find(limit, offset)
     if status:
         click.echo('Starting {0}, listing {1} apps on a total of {2} apps.'.format(
             offset,
             min(limit, infos['count']),
             infos['count']))
-        click.echo('Name\tVPC\tURI\tCreation Date\n')
+        click.echo('Name\tURI\tCreation Date\n')
         for result in infos['results']:
             click.echo('{0}\t{1}\t{2}\t{3}'.format(
                 result['name'],
-                result['vpc'],
                 result['uri'],
                 result['date_created']))
             click.echo('')
