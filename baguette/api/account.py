@@ -84,11 +84,11 @@ def signup(email, username, password):
     create_default_key(result['account']['username'], result['key'])
     return True, result
 
-def login(email, password):
+def login(username, password):
     """
     Given credentials, try to login baguette.io.
-    :param email: The email to authenticate.
-    :type email: str
+    :param username: The username to authenticate.
+    :type username: str
     :param password: The account password.
     :type password: str
     :returns: The status of the login.
@@ -96,7 +96,7 @@ def login(email, password):
     """
     endpoint = 'accounts/login/'
     url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
-    result = requests.post(url, data={'email':email, 'password':password})
+    result = requests.post(url, data={'username':username, 'password':password})
     try:
         result.raise_for_status()
     except requests.exceptions.HTTPError as error:

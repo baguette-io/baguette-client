@@ -35,7 +35,7 @@ def test_login_ok(req_ok):
     req_ok({'token':'jwt'})
     file_mock = mock.mock_open()
     with mock.patch('baguette.api.account.open', file_mock, create=True):
-        assert baguette.api.account.login('email', 'password')
+        assert baguette.api.account.login('username', 'password')
     file_mock().write.assert_called_once_with('jwt')
 
 def test_login_error(req_raise):
@@ -45,7 +45,7 @@ def test_login_error(req_raise):
     req_raise()
     file_mock = mock.mock_open()
     with mock.patch('baguette.api.account.open', file_mock, create=True):
-        assert not baguette.api.account.login('email', 'password')
+        assert not baguette.api.account.login('username', 'password')
     file_mock().write.assert_not_called()
 
 def test_signup_ok(req_ok):
@@ -80,7 +80,7 @@ def test_signup_error(req_raise):
 
 def test_create_default_key(req_ok):
     """
-    When signup check that the keys is writtent.
+    When signup check that the key is written.
     """
     file_mock = mock.mock_open()
     req_ok({'account':{'email': 'email', 'username':'username'},

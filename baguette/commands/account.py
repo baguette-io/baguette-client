@@ -44,25 +44,22 @@ def signup(username, email, password):
     return display_errors(infos)
 
 
-@click.argument('email', required=False)
-@account.command(help='Connect to baguette.io using email/password.')
-def login(email):
+@click.option('--username',
+              prompt=True,
+              default=lambda: os.environ.get('USER', ''))
+@account.command(help='Connect to baguette.io using username/password.')
+def login(username):
     """
-    Connect to baguette.io using email/password.
-    :param email: The email to log in with.
-    :type email: str
+    Connect to baguette.io using username/password.
+    :param username: The username to log in with.
+    :type username: str
     :returns: The status of the login.
     :rtype: bool
     """
-    if email:
-        click.echo('Welcome {0}, please enter your baguette.io password.'.format(email))
-    else:
-        click.echo('Please enter your baguette.io credentials.')
-        email = click.prompt('Email')
     password = click.prompt('Password', hide_input=True)
-    if api.login(email, password):
-        #click.echo('Successfully logged in as {0}. Credentials expire in 1 hour.'.format(email))
-        click.echo('Successfully logged in as {0}.'.format(email))
+    if api.login(username, password):
+        #click.echo('Successfully logged in as {0}. Credentials expire in 1 hour.'.format(username))
+        click.echo('Successfully logged in as {0}.'.format(username))
         return True
     click.echo('Authentication failed, please check your credentials.')
     return False
