@@ -47,7 +47,7 @@ def signup(username, email, password):
 @click.option('--username',
               prompt=True,
               default=lambda: os.environ.get('USER', ''))
-@account.command(help='Connect to baguette.io using username/password.')
+@account.command(help='Connect to baguette.io.')
 def login(username):
     """
     Connect to baguette.io using username/password.
@@ -58,7 +58,7 @@ def login(username):
     """
     password = click.prompt('Password', hide_input=True)
     if api.login(username, password):
-        #click.echo('Successfully logged in as {0}. Credentials expire in 1 hour.'.format(username))
+        os.environ['BAGUETTE_USER'] = username
         click.echo('Successfully logged in as {0}.'.format(username))
         return True
     click.echo('Authentication failed, please check your credentials.')
