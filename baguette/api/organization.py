@@ -1,6 +1,6 @@
 #-*- coding:utf-8 -*-
 """
-Module managing all the namespaces calls to baguette.io
+Module managing all the organizations calls to baguette.io
 """
 import logging
 import requests
@@ -11,8 +11,8 @@ LOGGER = logging.getLogger(__name__)
 
 def create(name):
     """
-    Given a name, try to create a namespace.
-    :param name: The namespace to create.
+    Given a name, try to create an organization.
+    :param name: The organization to create.
     :type name: str
     :returns: The status of the creation.
     :rtype: list (<bool>, <dict>)
@@ -20,7 +20,7 @@ def create(name):
     #1. Check that we have a token.
     token = account.get_token()
     #2. Variables for the request.
-    endpoint = 'vpcs/'
+    endpoint = 'organizations/'
     url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
     headers = {'Authorization': 'JWT {0}'.format(token)}
     #3. Query.
@@ -34,10 +34,10 @@ def create(name):
 
 def find(limit, offset):
     """
-    List the namespaces.
-    :param limit: The number of namespaces per request.
+    List the organizations.
+    :param limit: The number of organizations per request.
     :type limit: int
-    :param offset: The offset to start to retrieve the namespaces from.
+    :param offset: The offset to start to retrieve the organizations from.
     :type offset: int
     :returns: The status of the request.
     :rtype: list (<bool>, <dict>)
@@ -45,7 +45,7 @@ def find(limit, offset):
     #1. Check that we have a token.
     token = account.get_token()
     #2. Variables for the request.
-    endpoint = 'vpcs/'
+    endpoint = 'organizations/'
     url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
     headers = {'Authorization': 'JWT {0}'.format(token)}
     #3. Query.
@@ -59,8 +59,8 @@ def find(limit, offset):
 
 def delete(name):
     """
-    Given a name, try to delete a namespace.
-    :param name: The namespace to delete.
+    Given a name, try to delete an organization.
+    :param name: The organization to delete.
     :type name: str
     :returns: The status of the deletion.
     :rtype: list (<bool>, <dict>)
@@ -68,7 +68,7 @@ def delete(name):
     #1. Check that we have a token.
     token = account.get_token()
     #2. Variables for the request.
-    endpoint = 'vpcs/{0}'.format(name)
+    endpoint = 'organizations/{0}'.format(name)
     url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
     headers = {'Authorization': 'JWT {0}'.format(token)}
     #3. Query.

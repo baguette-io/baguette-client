@@ -1,6 +1,6 @@
 #-*-coding:utf-8 -*-
 """
-Vpcs commands.
+namespaces commands.
 """
 import click
 import baguette.api.vpc as api
@@ -9,44 +9,44 @@ from .utils import display_errors
 @click.group()
 def vpc():
     """
-    VPC group commands.
+    Namespace group commands.
     """
 
 @click.argument('name')
-@vpc.command(name='vpc-create', help='Create a vpc.')
+@vpc.command(name='namespace-create', help='Create a namespace.')
 def create(name):
     """
-    Create a vpc.
+    Create a namespace.
     Idempotent.
-    :param name: The vpc name.
+    :param name: The namespace name.
     :type name: str
     :returns: The status of the creation.
     :rtype: bool
     """
-    #1. Call the API to create the vpc
+    #1. Call the API to create the namespace
     created, infos = api.create(name)
     if created:
-        click.echo('Vpc {0} created.'.format(name))
+        click.echo('namespace {0} created.'.format(name))
         return True
     return display_errors(infos)
 
-@click.option('--offset', default=0, type=int, help='The offset to start retrieving the vpcs from.')
-@click.option('--limit', default=10, type=int, help='The number of vpcs per request.')
-@vpc.command(name='vpc-list', help='List all the vpcs.')
+@click.option('--offset', default=0, type=int, help='The offset to start retrieving the namespace from.')
+@click.option('--limit', default=10, type=int, help='The number of namespaces per request.')
+@vpc.command(name='namespace-list', help='List all the namespaces.')
 def find(offset, limit):
     """
-    List all the vpcs.
-    :param limit: The number of vpcs per request.
+    List all the namespaces.
+    :param limit: The number of namespaces per request.
     :type limit: int
-    :param offset: The offset to start to retrieve the vpcs from.
+    :param offset: The offset to start to retrieve the namespaces from.
     :type offset: int
     :returns: The status of the request.
     :rtype: bool
     """
-    #1. Call the API to get all the vpcs
+    #1. Call the API to get all the namespaces
     status, infos = api.find(limit, offset)
     if status:
-        click.echo('Starting {0}, listing {1} vpcs on a total of {2} vpcs.'.format(
+        click.echo('Starting {0}, listing {1} namespaces on a total of {2} namespaces.'.format(
             offset,
             min(limit, infos['count']),
             infos['count']))
@@ -61,18 +61,18 @@ def find(offset, limit):
     return display_errors(infos)
 
 @click.argument('name')
-@vpc.command(name='vpc-delete', help='Delete a vpc.')
+@vpc.command(name='namespace-delete', help='Delete a namespace.')
 def delete(name):
     """
-    Delete a vpc.
-    :param name: The vpc name to delete.
+    Delete a namespace.
+    :param name: The namespace name to delete.
     :type name: str
     :returns: The status of the deletion.
     :rtype: bool
     """
-    #1. Call the API to delete the vpc
+    #1. Call the API to delete the namespace
     deleted, infos = api.delete(name)
     if deleted:
-        click.echo('Vpc {0} deleted.'.format(name))
+        click.echo('namespace {0} deleted.'.format(name))
         return True
     return display_errors(infos)
