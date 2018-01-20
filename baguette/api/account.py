@@ -96,7 +96,7 @@ def login(username, password):
     """
     endpoint = 'accounts/login/'
     url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
-    result = requests.post(url, data={'username':username, 'password':password})
+    result = requests.post(url, json={'username':username, 'password':password})
     try:
         result.raise_for_status()
     except requests.exceptions.HTTPError as error:

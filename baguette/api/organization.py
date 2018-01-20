@@ -24,7 +24,7 @@ def create(name):
     url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
     headers = {'Authorization': 'JWT {0}'.format(token)}
     #3. Query.
-    result = requests.post(url, data={'name':name}, headers=headers)
+    result = requests.post(url, json={'name':name}, headers=headers)
     try:
         result.raise_for_status()
     except requests.exceptions.HTTPError as error:
@@ -76,6 +76,12 @@ def delete(name):
     try:
         result.raise_for_status()
     except requests.exceptions.HTTPError as error:
+        if result.status_code == 403:
+            result = {name: 'cannot be deleted'}
+        elif result.status_code == 404:
+            result = {name: 'not found'}
+        else:
+            result = result.json()
         LOGGER.info(error)
-        return False, result.json()
+        return False, result
     return True, {}
