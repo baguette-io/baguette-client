@@ -24,7 +24,7 @@ def create(name, key):
     url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
     headers = {'Authorization': 'JWT {0}'.format(token)}
     #3. Query.
-    result = requests.post(url, json={'name':name, 'public': key}, headers=headers)
+    result = requests.post(url, data={'name':name, 'public': key}, headers=headers)
     try:
         result.raise_for_status()
     except requests.exceptions.HTTPError as error:
