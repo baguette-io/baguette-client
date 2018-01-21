@@ -57,7 +57,7 @@ def find(offset, limit, organization):
     #1. Call the API to get all the namespaces
     status, infos = api.find(limit, offset, organization)
     if status:
-        click.echo('\n{0} : Starting {1}, listing {2} namespaces on a total of {3} namespaces.\n'.format(
+        click.echo('\n{0} : starting {1}, listing {2} namespaces on a total of {3} namespaces.\n'.format(
             organization,
             offset,
             min(limit, infos['count']),

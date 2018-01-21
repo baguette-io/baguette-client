@@ -46,7 +46,7 @@ def find(offset, limit):
     #1. Call the API to get all the organizations
     status, infos = api.find(limit, offset)
     if status:
-        click.echo('Starting {0}, listing {1} organizations on a total of {2} organizations.'.format(
+        click.echo('\nstarting {0}, listing {1} organizations on a total of {2} organizations.\n'.format(
             offset,
             min(limit, infos['count']),
             infos['count']))

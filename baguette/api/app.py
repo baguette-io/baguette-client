@@ -11,19 +11,21 @@ import baguette.utils as utils
 
 LOGGER = logging.getLogger(__name__)
 
-def create(name):
+def create(name, organization):
     """
     Given a name, try to create an app.
     Idempotent.
     :param name: The app to create.
     :type name: str
+    :param organization: The app's organization.
+    :type organization: str
     :returns: The status of the creation.
     :rtype: list (<bool>, <dict>)
     """
     #1. Check that we have a token.
     token = utils.get('token')
     #2. Variables for the request.
-    endpoint = 'projects/'
+    endpoint = 'projects/{0}/'.format(organization)
     url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
     headers = {'Authorization': 'JWT {0}'.format(token)}
     #3. Query.
@@ -58,20 +60,22 @@ def git_init(remote):
     if not any(r for r in repo.remotes if r.name == 'baguette.io'):
         repo.create_remote('baguette.io', remote)
 
-def find(limit, offset):
+def find(limit, offset, organization):
     """
     List the apps.
     :param limit: The number of apps per request.
     :type limit: int
     :param offset: The offset to start to retrieve the apps from.
     :type offset: int
+    :param organization: The app's organization.
+    :type organization: str
     :returns: The status of the request.
     :rtype: list (<bool>, <dict>)
     """
     #1. Check that we have a token.
     token = utils.get('token')
     #2. Variables for the request.
-    endpoint = 'projects/'
+    endpoint = 'projects/{0}/'.format(organization)
     url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
     headers = {'Authorization': 'JWT {0}'.format(token)}
     #3. Query.
@@ -83,18 +87,20 @@ def find(limit, offset):
         return False, result.json()
     return True, result.json()
 
-def delete(name):
+def delete(name, organization):
     """
     Given a name, try to delete an app.
     :param name: The app to delete.
     :type name: str
+    :param organization: The app's organization.
+    :type organization: str
     :returns: The status of the deletion.
     :rtype: list (<bool>, <dict>)
     """
     #1. Check that we have a token.
     token = utils.get('token')
     #2. Variables for the request.
-    endpoint = 'projects/{0}'.format(name)
+    endpoint = 'projects/{0}/{1}/'.format(organization, name)
     url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
     headers = {'Authorization': 'JWT {0}'.format(token)}
     #3. Query.
