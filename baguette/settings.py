@@ -2,7 +2,10 @@
 """
 Module containing the configuration.
 """
-import ConfigParser
+try:
+    import ConfigParser as configparser
+except ImportError:
+    import configparser
 import os
 
 def load():
@@ -10,7 +13,7 @@ def load():
     Load the tiny configuration
     from the ini file.
     """
-    parser = ConfigParser.RawConfigParser()
+    parser = configparser.RawConfigParser()
     path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'baguette.ini')
     parser.readfp(open(path))
     for section in parser.sections():

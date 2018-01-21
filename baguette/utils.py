@@ -2,7 +2,10 @@
 """
 Utils.
 """
-import ConfigParser
+try:
+    import ConfigParser as configparser
+except ImportError:
+    import configparser
 import os
 
 def set_config(username, token):
@@ -15,7 +18,7 @@ def set_config(username, token):
     :rtype: None
     """
     home = os.path.expanduser("~")
-    config = ConfigParser.RawConfigParser()
+    config = configparser.RawConfigParser()
     config.set('DEFAULT', 'user', username)
     config.set('DEFAULT', 'token', token)
     with open(os.path.join(home, '.baguetterc'), 'w') as filename:
@@ -27,7 +30,7 @@ def get(key):
     :returns: The key value.
     :rtype: None, str
     """
-    config = ConfigParser.ConfigParser()
+    config = configparser.ConfigParser()
     home = os.path.expanduser("~")
     baguetterc = os.path.join(home, '.baguetterc')
     if not os.path.exists(baguetterc):

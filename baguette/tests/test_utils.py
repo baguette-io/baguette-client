@@ -23,7 +23,7 @@ def test_get():
     Check that get() retrieve from the file.
     """
     with mock.patch('os.path.exists'):
-        with mock.patch('ConfigParser.ConfigParser.get', mock.Mock(return_value='my_user')):
+        with mock.patch('baguette.utils.configparser.ConfigParser.get', mock.Mock(return_value='my_user')):
             assert baguette.utils.get('user') == 'my_user'
-        with mock.patch('ConfigParser.ConfigParser.get', mock.Mock(return_value='my_token')):
+        with mock.patch('baguette.utils.configparser.ConfigParser.get', mock.Mock(return_value='my_token')):
             assert baguette.utils.get('token') == 'my_token'
