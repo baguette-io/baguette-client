@@ -14,6 +14,8 @@ def create(name, organization):
     Given a name, try to create a namespace.
     :param name: The namespace to create.
     :type name: str
+    :param organization: The namespace's organization.
+    :type organization: str
     :returns: The status of the creation.
     :rtype: list (<bool>, <dict>)
     """
@@ -32,20 +34,22 @@ def create(name, organization):
         return False, result.json()
     return True, result.json()
 
-def find(limit, offset):
+def find(limit, offset, organization):
     """
     List the namespaces.
     :param limit: The number of namespaces per request.
     :type limit: int
     :param offset: The offset to start to retrieve the namespaces from.
     :type offset: int
+    :param organization: The namespace's organization.
+    :type organization: str
     :returns: The status of the request.
     :rtype: list (<bool>, <dict>)
     """
     #1. Check that we have a token.
     token = utils.get('token')
     #2. Variables for the request.
-    endpoint = 'vpcs/'
+    endpoint = 'vpcs/{}/'.format(organization)
     url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
     headers = {'Authorization': 'JWT {0}'.format(token)}
     #3. Query.
@@ -57,18 +61,20 @@ def find(limit, offset):
         return False, result.json()
     return True, result.json()
 
-def delete(name):
+def delete(name, organization):
     """
     Given a name, try to delete a namespace.
     :param name: The namespace to delete.
     :type name: str
+    :param organization: The namespace's organization.
+    :type organization: str
     :returns: The status of the deletion.
     :rtype: list (<bool>, <dict>)
     """
     #1. Check that we have a token.
     token = utils.get('token')
     #2. Variables for the request.
-    endpoint = 'vpcs/{0}'.format(name)
+    endpoint = 'vpcs/{0}/{1}/'.format(organization, name)
     url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
     headers = {'Authorization': 'JWT {0}'.format(token)}
     #3. Query.
