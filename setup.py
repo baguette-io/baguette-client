@@ -33,7 +33,7 @@ setup(
     extras_require={
         'testing': [
             'mock==2.0.0',
-            'pytest==2.9.2',
+            'pytest==3.3.2',
             'pytest-cov==2.3.0',
             'pylint==1.6.1',
         ],

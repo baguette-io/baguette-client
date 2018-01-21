@@ -5,11 +5,11 @@ Module managing all the namespaces calls to baguette.io
 import logging
 import requests
 import baguette.settings
-import baguette.api.account as account
+import baguette.utils as utils
 
 LOGGER = logging.getLogger(__name__)
 
-def create(name):
+def create(name, organization):
     """
     Given a name, try to create a namespace.
     :param name: The namespace to create.
@@ -18,9 +18,9 @@ def create(name):
     :rtype: list (<bool>, <dict>)
     """
     #1. Check that we have a token.
-    token = account.get_token()
+    token = utils.get('token')
     #2. Variables for the request.
-    endpoint = 'vpcs/'
+    endpoint = 'vpcs/{0}/'.format(organization)
     url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
     headers = {'Authorization': 'JWT {0}'.format(token)}
     #3. Query.
@@ -43,7 +43,7 @@ def find(limit, offset):
     :rtype: list (<bool>, <dict>)
     """
     #1. Check that we have a token.
-    token = account.get_token()
+    token = utils.get('token')
     #2. Variables for the request.
     endpoint = 'vpcs/'
     url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
@@ -66,7 +66,7 @@ def delete(name):
     :rtype: list (<bool>, <dict>)
     """
     #1. Check that we have a token.
-    token = account.get_token()
+    token = utils.get('token')
     #2. Variables for the request.
     endpoint = 'vpcs/{0}'.format(name)
     url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
@@ -79,7 +79,10 @@ def delete(name):
         if result.status_code == 403:
             result = {name: 'cannot be deleted'}
         elif result.status_code == 404:
-            result = {name: 'not found'}
+            try:
+                result = result.json()
+            except:
+                result = {name: 'not found'}
         else:
             result = result.json()
         LOGGER.info(error)

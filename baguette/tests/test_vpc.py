@@ -15,7 +15,7 @@ def test_create_ok(req_ok):
     """
     req_ok({'name':'my_vpc', 'deletable': True,
             'date_created':'date_created', 'date_modified':'date_modified'})
-    status, infos = baguette.api.vpc.create('my_vpc')
+    status, infos = baguette.api.vpc.create('default', 'my_vpc')
     assert status
     assert 'name' in infos
     assert 'deletable' in infos
@@ -27,7 +27,7 @@ def test_create_error(req_raise):
     create API call which fails.
     """
     req_raise(result={'detail': 'Signature has expired.'})
-    status, infos = baguette.api.vpc.create('my_vpc')
+    status, infos = baguette.api.vpc.create('default', 'my_vpc')
     assert not status
     assert 'detail' in infos
 

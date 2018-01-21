@@ -58,7 +58,6 @@ def login(username):
     """
     password = click.prompt('Password', hide_input=True)
     if api.login(username, password):
-        os.environ['BAGUETTE_USER'] = username
         click.echo('Successfully logged in as {0}.'.format(username))
         return True
     click.echo('Authentication failed, please check your credentials.')

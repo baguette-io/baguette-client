@@ -12,21 +12,25 @@ def vpc():
     Namespace group commands.
     """
 
+@click.option('--organization', default=None, type=str, help='The namespace organization.')
 @click.argument('name')
 @vpc.command(name='namespace-create', help='Create a namespace.')
-def create(name):
+def create(name, organization):
     """
     Create a namespace.
     Idempotent.
     :param name: The namespace name.
     :type name: str
+    :param organization: The namespace's organization.
+    :type organization: str
     :returns: The status of the creation.
     :rtype: bool
     """
     #1. Call the API to create the namespace
-    created, infos = api.create(name)
+    organization  'default'
+    created, infos = api.create(name, organization)
     if created:
-        click.echo('namespace {0} created.'.format(name))
+        click.echo('{0} : namespace {1} created.'.format(organization, name))
         return True
     return display_errors(infos)
 

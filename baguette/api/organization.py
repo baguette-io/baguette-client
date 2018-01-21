@@ -5,7 +5,7 @@ Module managing all the organizations calls to baguette.io
 import logging
 import requests
 import baguette.settings
-import baguette.api.account as account
+import baguette.utils as utils
 
 LOGGER = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ def create(name):
     :rtype: list (<bool>, <dict>)
     """
     #1. Check that we have a token.
-    token = account.get_token()
+    token = utils.get('token')
     #2. Variables for the request.
     endpoint = 'organizations/'
     url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
@@ -43,7 +43,7 @@ def find(limit, offset):
     :rtype: list (<bool>, <dict>)
     """
     #1. Check that we have a token.
-    token = account.get_token()
+    token = utils.get('token')
     #2. Variables for the request.
     endpoint = 'organizations/'
     url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
@@ -66,7 +66,7 @@ def delete(name):
     :rtype: list (<bool>, <dict>)
     """
     #1. Check that we have a token.
-    token = account.get_token()
+    token = utils.get('token')
     #2. Variables for the request.
     endpoint = 'organizations/{0}'.format(name)
     url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
@@ -79,7 +79,10 @@ def delete(name):
         if result.status_code == 403:
             result = {name: 'cannot be deleted'}
         elif result.status_code == 404:
-            result = {name: 'not found'}
+            try:
+                result = result.json()
+            except:
+                result = {name: 'not found'}
         else:
             result = result.json()
         LOGGER.info(error)

@@ -5,7 +5,7 @@ Module managing all the keys calls to baguette.io
 import logging
 import requests
 import baguette.settings
-import baguette.api.account as account
+import baguette.utils as utils
 
 LOGGER = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ def create(name, key):
     :rtype: list (<bool>, <dict>)
     """
     #1. Check that we have a token.
-    token = account.get_token()
+    token = utils.get('token')
     #2. Variables for the request.
     endpoint = 'keys/'
     url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
@@ -43,7 +43,7 @@ def find(limit, offset):
     :rtype: list (<bool>, <dict>)
     """
     #1. Check that we have a token.
-    token = account.get_token()
+    token = utils.get('token')
     #2. Variables for the request.
     endpoint = 'keys/'
     url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
@@ -66,7 +66,7 @@ def delete(name):
     :rtype: list (<bool>, <dict>)
     """
     #1. Check that we have a token.
-    token = account.get_token()
+    token = utils.get('token')
     #2. Variables for the request.
     endpoint = 'keys/{0}'.format(name)
     url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member

@@ -16,7 +16,7 @@ def test_create_with_token_ok(req_ok):
     """
     req_ok({'repo_uri':'uri'})
     jwt = mock.Mock(return_value='my_token')
-    with mock.patch('baguette.api.account.get_token', jwt):
+    with mock.patch('baguette.utils.get', jwt):
         assert baguette.api.app.create('xxx')
 
 def test_create_error(req_raise):
@@ -25,7 +25,7 @@ def test_create_error(req_raise):
     """
     req_raise({})
     res = mock.Mock(return_value='my_token')
-    with mock.patch('baguette.api.account.get_token', res):
+    with mock.patch('baguette.utils.get', res):
         result, _ = baguette.api.app.create('xxx')
         assert not result
 
