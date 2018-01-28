@@ -40,16 +40,14 @@ def find(offset, limit, organization):
             min(limit, infos['count']),
             infos['count']))
         click.echo('Project\nUid\tStep\tFail\tCreation Date\n')
-        for wrapper in infos['results']:
-            _, results = next(wrapper.iteritems())
-            for result in results:
-                result = json.loads(result)
-                click.echo('{0}\t{1}\t{2}\t{3}\t{4}'.format(
-                    result['repo'],
-                    result['uid'],
-                    result['step'],
-                    result['fail'],
-                    result['date_created']))
-                click.echo('')
+        for result in infos['results']:
+            result = json.loads(result)
+            click.echo('{0}\t{1}\t{2}\t{3}\t{4}'.format(
+                result['repo'],
+                result['uid'],
+                result['step'],
+                result['fail'],
+                result['date_created']))
+            click.echo('')
         return True
     return display_errors(infos)
