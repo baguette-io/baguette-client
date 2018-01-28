@@ -39,11 +39,12 @@ def find(offset, limit, organization):
             offset,
             min(limit, infos['count']),
             infos['count']))
-        click.echo('Project\nUid\tStep\tFail\tCreation Date\n')
+        click.echo('Project\tBranch\tUid\tStep\tFail\tCreation Date\n')
         for result in infos['results']:
             result = json.loads(result)
-            click.echo('{0}\t{1}\t{2}\t{3}\t{4}'.format(
+            click.echo('{0}\t{1}\t{2}\t{3}\t{4}\t{5}'.format(
                 result['repo'],
+                result['branch'],
                 result['uid'],
                 result['step'],
                 result['fail'],
