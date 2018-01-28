@@ -13,6 +13,7 @@ def build():
     """
     Build group commands.
     """
+
 @click.option('--offset', default=0, type=int, help='The offset to start retrieving the build from.')
 @click.option('--limit', default=10, type=int, help='The number of builds per request.')
 @click.option('--organization', default=None, type=str, help='The organization to fetch the builds.')
@@ -46,6 +47,37 @@ def find(offset, limit, organization):
                 result['repo'],
                 result['branch'],
                 result['uid'],
+                result['step'],
+                result['fail'],
+                result['date_created']))
+            click.echo('')
+        return True
+    return display_errors(infos)
+
+@click.argument('uid')
+@click.option('--organization', default=None, type=str, help='The organization to fetch the builds.')
+@build.command(name='build-detail', help='Detail a build.')
+def detail(uid, organization):
+    """
+    Detail a build.
+    :param uid: The build's uid
+    :type uid: str
+    :param organization: The build's organization.
+    :type organization: str
+    :returns: The status of the request.
+    :rtype: bool
+    """
+    user = utils.get('user')
+    organization = organization or '{}-default'.format(user)
+    #1. Call the API to get the build detail
+    status, infos = api.detail(uid, organization)
+    if status:
+        click.echo('Project\tBranch\tStep\tFail\tCreation Date\n')
+        for result in infos['results']:
+            result = json.loads(result)
+            click.echo('{0}\t{1}\t{2}\t{3}\t{4}'.format(
+                result['repo'],
+                result['branch'],
                 result['step'],
                 result['fail'],
                 result['date_created']))
