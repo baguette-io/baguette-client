@@ -14,9 +14,9 @@ def test_list_ok(req_ok):
     find API call which succeed.
     """
     req_ok({'count': 2, 'previous': None, 'results': [{'date_created': '2016-10-07T18:24:32',
-                                                       'repo': 'default', 'fail': False},
+                                                       'name': 'default', 'fail': False},
                                                       {'date_created': '2016-10-09T01:19:57',
-                                                       'repo': 'deux', 'fail': 'True'},
+                                                       'name': 'deux', 'fail': 'True'},
                                                      ], 'next': None})
     status, infos = baguette.api.deployment.find(10, 0, 'default')
     assert status
@@ -37,9 +37,9 @@ def test_detail_ok(req_ok):
     detail API call which succeed.
     """
     req_ok({'count': 2, 'previous': None, 'results': [{'date_created': '2016-10-07T18:24:32',
-                                                       'repo': 'default', 'fail': False},
+                                                       'name': 'default', 'fail': False},
                                                       {'date_created': '2016-10-09T01:19:57',
-                                                       'repo': 'deux', 'fail': 'True'},
+                                                       'name': 'deux', 'fail': 'True'},
                                                      ], 'next': None})
     status, infos = baguette.api.deployment.detail('test', 'default')
     assert status
