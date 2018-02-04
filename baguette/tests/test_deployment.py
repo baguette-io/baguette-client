@@ -54,3 +54,21 @@ def test_list_error(req_raise):
     status, infos = baguette.api.deployment.detail('test', 'default')
     assert not status
     assert 'detail' in infos
+
+def test_stop_ok(req_ok):
+    """
+    stop API call which succeed.
+    """
+    req_ok({})
+    status, infos = baguette.api.deployment.stop('uid', 'orga')
+    assert status
+    assert infos == {}
+
+def test_stop_error(req_raise):
+    """
+    stop API call which fails.
+    """
+    req_raise(result={'detail': 'Signature has expired.'})
+    status, infos = baguette.api.deployment.stop('uid', 'orga')
+    assert not status
+    assert 'detail' in infos

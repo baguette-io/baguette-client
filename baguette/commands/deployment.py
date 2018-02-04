@@ -79,3 +79,25 @@ def detail(uid, organization):
             click.echo('')
         return True
     return display_errors(infos)
+
+@click.argument('uid')
+@click.option('--organization', default=None, type=str, help='The organization to stop the deployment.')
+@deployment.command(name='deployment-stop', help='Stop a deployment.')
+def detail(uid, organization):
+    """
+    Stop a deployment.
+    :param uid: The deployment's uid
+    :type uid: str
+    :param organization: The deployment's organization.
+    :type organization: str
+    :returns: The status of the request.
+    :rtype: bool
+    """
+    user = utils.get('user')
+    organization = organization or '{}-default'.format(user)
+    #1. Call the API to get the deployment detail
+    status, infos = api.stop(uid, organization)
+    if status:
+        click.echo('{} is stopping'.format(uid))
+        return True
+    return display_errors(infos)

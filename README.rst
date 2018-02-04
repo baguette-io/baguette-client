@@ -21,6 +21,7 @@ Help
       build-list           List all the builds.
       deployment-detail    Detail a deployment.
       deployment-list      List all the deployments.
+      deployment-stop      Stop a deployment.
       key-create           Create a key.
       key-delete           Delete a key.
       key-list             List all the keys.

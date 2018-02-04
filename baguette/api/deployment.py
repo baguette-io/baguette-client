@@ -60,3 +60,28 @@ def detail(uid, organization):
         LOGGER.info(error)
         return False, result.json()
     return True, result.json()
+
+def stop(uid, organization):
+    """
+    Stop a deployment.
+    :param deployment: The deployment's uid.
+    :type deployment: str
+    :param organization: The deployment's organization.
+    :type organization: str
+    :returns: The status of the deletion.
+    :rtype: list (<bool>, <dict>)
+    """
+    #1. Check that we have a token.
+    token = utils.get('token')
+    #2. Variables for the request.
+    endpoint = 'deployments/{}/{}/'.format(organization, uid)
+    url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
+    headers = {'Authorization': 'JWT {0}'.format(token)}
+    #3. Query.
+    result = requests.delete(url, headers=headers)
+    try:
+        result.raise_for_status()
+    except requests.exceptions.HTTPError as error:
+        LOGGER.info(error)
+        return False, result.json()
+    return True, {}
