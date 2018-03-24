@@ -48,7 +48,7 @@ def signup(email, username, password):
     endpoint = 'accounts/register/'
     url = baguette.settings.default['api'] + endpoint# pylint:disable=no-member
     #2. Query
-    result = requests.post(url, {'username': username, 'email': email, 'password': password,
+    result = requests.post(url, data={'username': username, 'email': email, 'password': password,
                                  'confirm_password':password})
     try:
         result.raise_for_status()
