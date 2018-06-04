@@ -6,7 +6,7 @@ from setuptools import find_packages, setup
 
 setup(
     name='baguette-client',
-    version='0.11',
+    version='0.12',
     description='Baguette Command Line Interface',
     long_description=open('README.rst').read(),
     keywords=['cli', 'baguette'],
