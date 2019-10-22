@@ -22,7 +22,7 @@ setup(
       ],
     packages=find_packages(),
     install_requires=[
-        'requests==2.18.4',
+        'requests==2.20.0',
         'click==6.6',
         'GitPython==2.0.8',
     ],
